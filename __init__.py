@@ -36,14 +36,16 @@ def _log(message):
 
 def convert_workflow_path_back(path):
     """
-    Convert workflows__SLASH__ back to workflows/ in the path.
+    Converts all remaining __SLASH__ markers back to / in the path.
 
     Examples:
         'workflows__SLASH__test.json' -> 'workflows/test.json'
         'userdata/workflows__SLASH__my_flow.json' -> 'userdata/workflows/my_flow.json'
+        'workflows__SLASH__foo__SLASH__bar.json' -> 'workflows/foo/bar.json'
     """
     if SLASH_REPLACEMENT in path:
-        return path.replace(f'workflows{SLASH_REPLACEMENT}', 'workflows/')
+        # Convert all __SLASH__ markers back to /
+        path = path.replace(SLASH_REPLACEMENT, '/')
     return path
 
 

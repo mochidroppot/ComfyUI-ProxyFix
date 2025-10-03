@@ -43,10 +43,12 @@ app.registerExtension({
 
                     // Replace workflows/ with workflows__SLASH__ in the URL
                     // This handles both encoded (%2F) and unencoded (/) slashes
+                    // Also handles multiple slashes in the path (e.g., /workflows/foo/bar.json)
                     url = url
-                        .replace(/\/workflows\//g, `/workflows${SLASH_REPLACEMENT}`)
-                        .replace(/workflows%2F/gi, `workflows${SLASH_REPLACEMENT}`)
-                        .replace(/workflows%252F/gi, `workflows${SLASH_REPLACEMENT}`); // Double-encoded
+                        .replace(/workflows%2F(.*)/gi, (match, path) => {
+                            // Handle URL-encoded slashes in the path
+                            return `workflows${SLASH_REPLACEMENT}${path.replace(/%2F/gi, SLASH_REPLACEMENT)}`;
+                        });
 
                     if (url !== originalUrl) {
                         console.log('[ProxyFix] Fixed workflow path:', {
